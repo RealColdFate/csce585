@@ -3,7 +3,7 @@ import os
 import random
 from song import Song
 
-SAMPLE_SIZE = 20
+SAMPLE_SIZE = 10
 
 
 def count_song_map_total_duration(song_dict: dict) -> int:
