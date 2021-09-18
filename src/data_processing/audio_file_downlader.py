@@ -1,25 +1,9 @@
+from creat_song_sample_map import parse_target_directory_for_next_available_file_name
 import re
 import urllib.request
-from song import Song
+from song import *
 import os
 import youtube_dl
-
-# TODO fix this so the list/ dict can be loaded in (probably store song data as json)
-SONG_MAP = {
-    0: Song(index=0, title='Eternal Flame', artist='The Bangles', genre='album rock', year=2004, length=238),
-    1: Song(index=1, title='Kingston Town', artist='UB40', genre='reggae fusion', year=1989, length=228),
-    2: Song(index=2, title='Always On My Mind', artist='Willie Nelson', genre='classic country pop', year=1982,
-            length=213),
-    3: Song(index=3, title='The Way It Is', artist='Bruce Hornsby', genre='album rock', year=1986, length=298),
-    4: Song(index=4, title='White Flag', artist='Dido', genre='dance pop', year=2003, length=241),
-    5: Song(index=5, title='Walking in Memphis', artist='Marc Cohn', genre='folk', year=1991, length=253),
-    6: Song(index=6, title='Fairytale of New York (feat. Kirsty MacColl)', artist='The Pogues', genre='celtic punk',
-            year=1988, length=272),
-    7: Song(index=7, title='The Boys Of Summer', artist='Don Henley', genre='album rock', year=1984, length=289),
-    8: Song(index=8, title='Empire State of Mind (Part II) Broken Down', artist='Alicia Keys', genre='hip pop',
-            year=2009, length=216),
-    9: Song(index=9, title='She Will Be Loved', artist='Maroon 5', genre='pop', year=2002, length=257)
-}
 
 
 def get_url_from_search_term(search_term: str) -> str:
@@ -65,17 +49,42 @@ def download_playlist(playlist: list, output_file_path: str) -> None:
         print(f"Downloaded {playlist[i].title}")
 
 
+def get_json_str_form_file(file_path: str) -> str:
+    with open(file_path, 'r') as file:
+        return file.read().replace('\n', '')
+
+
+def get_song_dict_form_json_dict(json_dict: dict):
+    for k, v in json_dict.items():
+        json_dict[k] = load_song_form_json(v)
+
+    return json_dict
+
+
+def parse_string_for_next_available_file_path(string: str) -> str:
+    split = os.path.split(string)[1].split('_')
+    print(split)
+    split[-2] = str(int(split[-2]) + 1)
+    print(split)
+
+
 def main() -> None:
-    song_list_name = "test_song_list_of_10_songs_0"  # TODO source this dynamically from song dict
+    sample_dict_path = "sample_dicts/sample_dict_of_3_songs_0_.json"
     target_dir = '../../data/unmodified_song_lists/'
+
+    song_list_name = os.path.split(sample_dict_path)[1].replace('.json', '')
+
     target_dir = os.path.join(target_dir, song_list_name)
 
-    song_list = list(SONG_MAP.values())
+    json_str = get_json_str_form_file(sample_dict_path)
+    json_map = json.loads(json_str)
+    song_map = get_song_dict_form_json_dict(json_map)
+    song_list = list(song_map.values())
 
     '''
     if you uncomment this it may download a large amount of data to your pc
     '''
-    download_playlist(song_list, target_dir)
+    #download_playlist(song_list, target_dir)
 
 
 if __name__ == '__main__':

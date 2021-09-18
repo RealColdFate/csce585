@@ -1,7 +1,7 @@
 import csv
 import os
 import random
-from song import Song
+from song import *
 
 SAMPLE_SIZE = 10
 
@@ -90,33 +90,26 @@ def parse_target_directory_for_next_available_file_name(target_dir: str, list_le
     else:
         new_key = max(valid_keys) + 1
 
-    out_put_file_name = f"sample_dict_of_{list_len}_songs_{new_key}_.py"
+    out_put_file_name = f"sample_dict_of_{list_len}_songs_{new_key}_.json"
 
     return os.path.join(target_dir, out_put_file_name)
 
 
 def write_song_map_sample_to_file(song_dict: dict):
     """
-    Writes the given song dict into a working python file
+    Writes the given song dict into a json file
     :param song_dict: dict
     """
     target_dir = 'sample_dicts'
 
     output_file_path = parse_target_directory_for_next_available_file_name(target_dir, len(song_dict))
 
-    with open(output_file_path, 'w') as f:
+    json_song_dict = {}
+    for k, v in song_dict.items():
+        json_song_dict[k] = v.to_json()
 
-        i = 1
-        f.write("from ..song import Song\n\nSONG_MAP = {\n")
-        for k, v in song_dict.items():
-            if not i == SAMPLE_SIZE:
-                item_str = ' ' * 4 + str(k) + ': ' + repr(v) + ',\n'
-                f.write(item_str)
-            else:
-                item_str = ' ' * 4 + str(k) + ': ' + repr(v) + '\n'
-                f.write(item_str)
-            i += 1
-        f.write('}')
+    with open(output_file_path, 'w') as f:
+        f.write(json.dumps(json_song_dict, indent=4))
 
 
 def main():
