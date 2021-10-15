@@ -50,7 +50,7 @@ def gather_song_paths_list(dir_path: str) -> list:
     return [os.path.join(dir_path, p) for p in os.listdir(dir_path)]
 
 
-def get_sib_dir_names_form_song_paths(song_paths: list) -> list:
+def get_sub_dir_names_form_song_paths(song_paths: list) -> list:
     """
     This is formatting for the sub directories the song segments will be exported to
     so it will just parse the song names form the song file paths
@@ -83,7 +83,7 @@ def create_segment_dirs(song_paths: list, export_dir: str) -> list:
         os.mkdir(export_dir)
 
     # get the song names form paths
-    song_names = get_sib_dir_names_form_song_paths(song_paths)
+    song_names = get_sub_dir_names_form_song_paths(song_paths)
 
     segment_dir_paths = []
     # create individual sub directories for each song
