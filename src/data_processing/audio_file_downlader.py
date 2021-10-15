@@ -60,13 +60,6 @@ def get_song_dict_form_json_dict(json_dict: dict):
     return json_dict
 
 
-def parse_string_for_next_available_file_path(string: str) -> str:
-    split = os.path.split(string)[1].split('_')
-    print(split)
-    split[-2] = str(int(split[-2]) + 1)
-    print(split)
-
-
 def main() -> None:
     sample_dict_path = "sample_dicts/sample_dict_of_3_songs_0_.json"
     target_dir = '../../data/unmodified_song_lists/'
@@ -83,7 +76,7 @@ def main() -> None:
     '''
     if you uncomment this it may download a large amount of data to your pc
     '''
-    #download_playlist(song_list, target_dir)
+    # download_playlist(song_list, target_dir)
 
 
 if __name__ == '__main__':
