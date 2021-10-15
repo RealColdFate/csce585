@@ -6,6 +6,11 @@ import youtube_dl
 
 
 def get_url_from_search_term(search_term: str) -> str:
+    """
+    Attains url from search query
+    :param search_term: str
+    :return: str url
+    """
     search_input = search_term.replace(' ', '+')
     html = urllib.request.urlopen("https://www.youtube.com/results?search_query=" + search_input)
     video_ids = re.findall(r"watch\?v=(\S{11})", html.read().decode())
@@ -14,6 +19,11 @@ def get_url_from_search_term(search_term: str) -> str:
 
 
 def download_from_url(url: str, output_file_name: str) -> None:
+    """
+    Downloads audio file in mp3 format from youtube url
+    :param url: str
+    :param output_file_name: str
+    """
     video_info = youtube_dl.YoutubeDL().extract_info(
         url=url, download=False
     )
@@ -31,6 +41,11 @@ def download_from_url(url: str, output_file_name: str) -> None:
 
 
 def download_playlist(playlist: list, output_file_path: str) -> None:
+    """
+    Downloads a playlist of .mp3 audio files given list of search terms from youtube
+    :param playlist: list of search terms
+    :param output_file_path: str
+    """
     # create parent dirs
     split = os.path.split(output_file_path)
     if not os.path.isdir(split[0]):
@@ -49,11 +64,21 @@ def download_playlist(playlist: list, output_file_path: str) -> None:
 
 
 def get_json_str_form_file(file_path: str) -> str:
+    """
+    Returns the content of a text file as a valid json string
+    :param file_path: str
+    :return: str
+    """
     with open(file_path, 'r') as file:
         return file.read().replace('\n', '')
 
 
-def get_song_dict_form_json_dict(json_dict: dict):
+def get_song_dict_form_json_dict(json_dict: dict) -> dict:
+    """
+    Takes a dictionary of json objects and returns a dictionary of Song objects mapped to their key from the json dict
+    :param json_dict: dict
+    :return: dict
+    """
     for k, v in json_dict.items():
         json_dict[k] = load_song_form_json(v)
 
