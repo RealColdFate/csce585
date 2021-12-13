@@ -1,3 +1,5 @@
+import pandas as pd
+
 from audio_file_segmenting import *
 import numpy as np
 from numpy import ndarray
@@ -10,8 +12,11 @@ import librosa
  This constant assumes that the song segments you want to get MFCCs for are in the export path
  for the list provided to "audio_file_segmenting.py"
 '''
+
+# change this to the overlay export path to generate mfccs for overlaid song segments
 TARGET_PATH_FOR_SEGMENT_MFCCS = EXPORT_PATH_FOR_SEGMENTS_OF_TARGET_SONG_LIST
-SEGMENT_MFCC_EXPORT_PATH = os.path.join(PROJECT_SONG_SEGMENT_EXPORT_PATH, TARGET_SONG_LIST + 'segment_mfccs')
+# adjust this accordingly for where you want to export the mfcc vectors to
+SEGMENT_MFCC_EXPORT_PATH = os.path.join(PROJECT_SONG_SEGMENT_EXPORT_PATH, TARGET_SONG_LIST + 'norm_segment_mfccs')
 NUMBER_OF_MFCC = 35
 
 
@@ -69,7 +74,10 @@ def create_feature_vector_of_mean_mfcc_for_song(song_file_path: str) -> ndarray:
     mfccs = librosa.feature.mfcc(y=song_segment, sr=sample_rate, n_mfcc=NUMBER_OF_MFCC)
     mfccs_processed = np.mean(mfccs.T, axis=0)
 
-    return mfccs_processed
+    df = pd.DataFrame(mfccs_processed)
+    z_score_normalized_mfccs = (df.values - df.values.mean()) / df.values.std()
+    z_score_normalized_mfccs = np.array([i[0] for i in z_score_normalized_mfccs])
+    return z_score_normalized_mfccs
 
 
 def get_seg_name(segment_path: str) -> str:
